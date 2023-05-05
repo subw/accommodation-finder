@@ -16,6 +16,7 @@ export interface IAccommodation {
     id: string;
     name: string;
     maxCapacity: number;
+    currentCapacity: number;
     selected: boolean;
     checkedIn: boolean;
     systemStatusText: string;
@@ -35,7 +36,7 @@ export const useAccommodationStore = create<AccommodationState>()( devtools((set
     accommodations: [],
     getAccommodations: () => {
         set({ accommodations: accommodationsData.map((accomodationData: AccommodationData) => { 
-            return {...accomodationData, selected: false, checkedIn: false, systemStatusText: ''}
+            return {...accomodationData, currentCapacity: accomodationData.maxCapacity, selected: false, checkedIn: false, systemStatusText: ''}
         })})
     },
     selectAccommodation: (id: string) => {
@@ -49,7 +50,7 @@ export const useAccommodationStore = create<AccommodationState>()( devtools((set
         set((state) => ({ accommodations: state.accommodations
             .map((accommodation: IAccommodation) => {
                 if (accommodation.selected) {
-                    return {...accommodation, checkedIn: !accommodation.checkedIn}
+                    return {...accommodation, checkedIn: !accommodation.checkedIn, currentCapacity: accommodation.currentCapacity - 1}
                 } else {
                     return {...accommodation, checkedIn: false}
                 }
@@ -59,7 +60,11 @@ export const useAccommodationStore = create<AccommodationState>()( devtools((set
     checkOutAccommodation: () => {
         set((state) => ({ accommodations: state.accommodations
             .map((accommodation: IAccommodation) => {
-                return {...accommodation, checkedIn: false}
+                if (accommodation.selected) {
+                    return {...accommodation, checkedIn: !accommodation.checkedIn, currentCapacity: accommodation.currentCapacity + 1}
+                } else {
+                    return accommodation
+                }
             })
         }))
     },

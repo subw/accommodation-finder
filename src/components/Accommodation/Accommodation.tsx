@@ -13,7 +13,8 @@ const Accommodation: FC<AccommodationProps> = (accommodationProps: Accommodation
   <div className="Accommodation" data-testid="Accommodation">
     Accommodation Component
     <p>{accommodationProps.selectedAccommodation?.name}</p>
-    <p>{accommodationProps.selectedAccommodation?.maxCapacity}</p>
+    <p>Anzahl Plätze gesamt: {accommodationProps.selectedAccommodation?.maxCapacity}</p>
+    <p>Anzahl freie Plätze: {accommodationProps.selectedAccommodation?.currentCapacity}</p>
     {accommodationProps.selectedAccommodation?.checkedIn 
       ? <button onClick={() => accommodationProps.onCheckOut()}>Check-Out</button>
       : <button onClick={() => accommodationProps.onCheckIn()}>Check-In</button>}
