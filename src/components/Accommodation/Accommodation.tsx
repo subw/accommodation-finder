@@ -1,10 +1,12 @@
 import React, { FC } from 'react';
 import './Accommodation.css';
-import { IAccommodation } from '../../App.store';
+import { AccommodationState, IAccommodation, useAccommodationStore } from '../../App.store';
 
 
 interface AccommodationProps {
   selectedAccommodation: IAccommodation | undefined;
+  onCheckIn: any;
+  onCheckOut: any;
 }
 
 const Accommodation: FC<AccommodationProps> = (accommodationProps: AccommodationProps) => (
@@ -12,6 +14,10 @@ const Accommodation: FC<AccommodationProps> = (accommodationProps: Accommodation
     Accommodation Component
     <p>{accommodationProps.selectedAccommodation?.name}</p>
     <p>{accommodationProps.selectedAccommodation?.maxCapacity}</p>
+    {accommodationProps.selectedAccommodation?.checkedIn 
+      ? <button onClick={() => accommodationProps.onCheckOut()}>Check-Out</button>
+      : <button onClick={() => accommodationProps.onCheckIn()}>Check-In</button>}
+    <p>{accommodationProps.selectedAccommodation?.systemStatusText}</p>
   </div>
 );
 
