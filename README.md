@@ -2,7 +2,8 @@ Welcome to my very first react.js project!
 This is not a fully working app, and it has lots of open TODOs.
 Instead, it is a coding challenge meant to serve as a basis for discussion.
 
-
+It is mobile-first and meant to be used on small screens.
+It only fetches the first 10 entries in the API for demonstration purposes and caches them for 24 hours.
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
