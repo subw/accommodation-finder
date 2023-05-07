@@ -70,7 +70,7 @@ export const useAccommodationStore = create<AccommodationState>()( devtools(pers
         }))
     },
     checkInAccommodation: async () => {
-        await mockAPICallPost({},1000);
+        await mockAPICallPost({},500);
         set((state) => ({ accommodations: state.accommodations
             .map((accommodation: IAccommodation) => {
                 if (accommodation.selected) {
@@ -82,7 +82,7 @@ export const useAccommodationStore = create<AccommodationState>()( devtools(pers
         }));        
     },
     checkOutAccommodation: async () => {
-        await mockAPICallPost({},1000);
+        await mockAPICallPost({},500);
         set((state) => ({ accommodations: state.accommodations
             .map((accommodation: IAccommodation) => {
                 if (accommodation.selected) {
@@ -112,14 +112,19 @@ export const useAccommodationStore = create<AccommodationState>()( devtools(pers
         }))
     },
     addTagToAccommodation: async (newTag: string) => {
+        await mockAPICallPost({},500);
         set((state) => ({ accommodations: state.accommodations
             .map((accommodation: IAccommodation) => {
                 if(accommodation.tags.includes(newTag)) {
-                    throw new Error('Tag already exist, no update happened');
+                    throw new Error('This tag already exists.');
+                };
+                if (accommodation.selected) {
+                    const updatedTags: string[] = accommodation.tags.splice(0);
+                    updatedTags.push(newTag);
+                    return {...accommodation, tags: updatedTags}
+                } else {
+                    return accommodation;
                 }
-                const updatedTags: string[] = accommodation.tags.splice(0);
-                updatedTags.push(newTag);
-                return {...accommodation, tags: updatedTags}
             })
         }))
     }

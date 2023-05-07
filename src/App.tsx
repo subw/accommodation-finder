@@ -50,12 +50,12 @@ const App: any = () => {
     }
   }
 
-  async function handleAddTag() {
+  async function handleAddTag(newTag: string) {
     try {
-      await addTagToAccommodation('newTag');
+      await addTagToAccommodation(newTag);
       updateSystemStatusText('successfully added a new tag');
     } catch (error: any) {
-      updateSystemStatusText('there was a problem adding your tag.' + error.message);
+      updateSystemStatusText('Your tag was not added.' + error.message);
     }
   }
 
@@ -78,7 +78,7 @@ const App: any = () => {
             })[0]} 
             onCheckIn={() => handleCheckIn()}
             onCheckOut={() => handleCheckOut()}
-            addTag={() => handleAddTag()}/>
+            addTag={(newTag: string) => handleAddTag(newTag)}/>
       }
     </div>
   );

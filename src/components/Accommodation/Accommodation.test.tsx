@@ -6,7 +6,7 @@ import Accommodation from './Accommodation';
 
 describe('<Accommodation />', () => {
   test('it should mount', () => {
-    render(<Accommodation selectedAccommodation={undefined} onCheckIn={null} onCheckOut={null}/>);
+    render(<Accommodation selectedAccommodation={undefined} onCheckIn={null} onCheckOut={null} addTag={null}/>);
     
     const accommodation = screen.getByTestId('Accommodation');
 
