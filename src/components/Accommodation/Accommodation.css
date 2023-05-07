@@ -22,9 +22,6 @@
     text-align: center;
 }
 
-.accommodation-tags {
-}
-
 .check-in-out-button {
     min-height: 10vh;
     background-color:  rgba(161, 132, 96, 0.322);
@@ -32,6 +29,7 @@
     font-weight: bold;
     font-size: large;
     color: #393636;
+    cursor: pointer;
 }
 
 .tag-items {
@@ -65,4 +63,5 @@
     height: 5vh;
     background-color: rgba(161, 132, 96, 0.322);
     border-radius: 5px;
+    cursor: pointer;
 }

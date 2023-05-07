@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import './Accommodation.css';
-import { AccommodationState, IAccommodation, useAccommodationStore } from '../../App.store';
+import { IAccommodation } from '../../App.store';
 
 
 interface AccommodationProps {
@@ -35,7 +35,7 @@ const Accommodation: FC<AccommodationProps> = (accommodationProps: Accommodation
       {accommodationProps.selectedAccommodation?.currentCapacity} m entfernt
     </div>
     <div className="accommodation-occupancy">
-      {accommodationProps.selectedAccommodation?.currentCapacity} von {accommodationProps.selectedAccommodation?.maxCapacity} Plätze frei
+      {accommodationProps.selectedAccommodation?.currentCapacity} von {accommodationProps.selectedAccommodation?.maxCapacity} Plätzen frei
     </div>
     <div className="accommodation-address">
       {accommodationProps.selectedAccommodation?.address}
