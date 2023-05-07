@@ -10,23 +10,29 @@ interface OverviewProps {
 const Overview: FC<OverviewProps> = (overviewProps: OverviewProps) => {
 
     const listItems = overviewProps.accommodations?.map((accommodation: IAccommodation) =>
-        <li key={accommodation.id}>
-          <p>
-            <b>Name: </b>
+        <li className="list-entry" key={accommodation.id} onClick={() => overviewProps.onButtonClick(accommodation.id)}>
+          <p className="entry-name">
             {accommodation.name}
           </p>
-          <p>
-            <b>Places available: </b>
+          <p className="entry-distance">
             {accommodation.maxCapacity}
           </p>
-          <button onClick={() => overviewProps.onButtonClick(accommodation.id)}>view accommodation</button>
         </li>
       );
   
   return (
     <div className="Overview" data-testid="Overview">
-      Overview Component
-      <ul>{listItems}</ul>
+      <div className="filter">
+        <input className="checkbox" type="checkbox"></input>
+        <label className="label">available</label>
+      </div>
+      <ul className="accommodations-list">
+        <li className="header">
+          <p className="header-name"><b>Name</b></p>
+          <p className="header-distance"><b>Entfernung</b></p>
+        </li>
+        {listItems}
+      </ul>
     </div>
   )
 };

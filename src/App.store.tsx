@@ -37,6 +37,7 @@ export interface IAccommodation {
     checkedIn: boolean;
     systemStatusText: string;
     tags: string[];
+    address: string;
 }
 
 export interface AccommodationState {
@@ -101,7 +102,8 @@ export const useAccommodationStore = create<AccommodationState>()( devtools(pers
                 currentCapacity: accomodationData.properties.plaetze, 
                 selected: false, 
                 checkedIn: false, 
-                systemStatusText: '', 
+                systemStatusText: '',
+                address: accomodationData.properties.strasse + ' ' + accomodationData.properties.haus_nr + ' ' + accomodationData.properties.ort,
                 tags: ['unterstaffed', 'clean']}
         }),
         lastFetchTime: currentTime});

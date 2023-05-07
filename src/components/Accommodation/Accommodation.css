@@ -1,1 +1,68 @@
-.Accommodation {}
+.Accommodation {
+    display: flex;
+    flex-direction: column;
+}
+
+.accommodation-name {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.accommodation-distance {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.accommodation-occupancy {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.accommodation-address {
+    text-align: center;
+}
+
+.accommodation-tags {
+}
+
+.check-in-out-button {
+    min-height: 10vh;
+    background-color:  rgba(161, 132, 96, 0.322);
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: large;
+    color: #393636;
+}
+
+.tag-items {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 10px;
+    list-style-type: none;
+    padding: 0;
+}
+
+.tag-item {
+    background-color: rgba(161, 132, 96, 0.322);
+    text-align: center;
+    min-height: 5vh;
+    border-radius: 2px;
+}
+
+.tag-adding {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.tag-input {
+    width: 77%;
+}
+
+.add-tag-button {
+    max-width: 17%;
+    aspect-ratio: 1;
+    height: 5vh;
+    background-color: rgba(161, 132, 96, 0.322);
+    border-radius: 5px;
+}

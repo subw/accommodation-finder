@@ -3,6 +3,7 @@ import Overview from './components/Overview/Overview';
 import Accommodation from './components/Accommodation/Accommodation';
 import { AccommodationState, AppState, IAccommodation, useAccommodationStore, useAppStore } from './App.store';
 import { useEffect } from 'react';
+import { FaArrowLeft } from "react-icons/fa";
 
 const App: any = () => {
 
@@ -61,25 +62,33 @@ const App: any = () => {
 
   useEffect(() => {
     fetchAccommodations();
-  },[])
+  }, [])
 
   useEffect(() => {
     resetSystemStatusText();
-  },[location])
+  }, [location])
 
   return (
     <div className="App">
-      <button onClick={() => { changeLocation('overview') }}>home</button>
+      <div className="toolbar">
       {location === 'overview'
-        ? <Overview accommodations={accommodations} onButtonClick={(id: string) => handleAccommodationButtonClicked(id)} />
-        : <Accommodation 
+        ? <div className="home-button-placeholder"></div>
+        : <div className="home-button" onClick={() => { changeLocation('overview') }}><FaArrowLeft /></div>
+      }
+        <h1 className="app-name">Accommodation Finder</h1>
+      </div>
+      <div className="content">
+        {location === 'overview'
+          ? <Overview accommodations={accommodations} onButtonClick={(id: string) => handleAccommodationButtonClicked(id)} />
+          : <Accommodation
             selectedAccommodation={accommodations.filter((accommodation: IAccommodation) => {
               return accommodation.selected;
-            })[0]} 
+            })[0]}
             onCheckIn={() => handleCheckIn()}
             onCheckOut={() => handleCheckOut()}
-            addTag={(newTag: string) => handleAddTag(newTag)}/>
-      }
+            addTag={(newTag: string) => handleAddTag(newTag)} />
+        }
+      </div>
     </div>
   );
 }

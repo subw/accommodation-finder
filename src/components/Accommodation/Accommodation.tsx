@@ -21,28 +21,38 @@ const Accommodation: FC<AccommodationProps> = (accommodationProps: Accommodation
   }
 
     const tagItems = accommodationProps.selectedAccommodation?.tags.map((tag: string) =>
-      <li key={tag}>{tag}
+      <li className="tag-item" key={tag}><p>{tag}</p>
       </li>
     );
 
   return (
   <div className="Accommodation" data-testid="Accommodation">
-    Accommodation Component
-    <p>{accommodationProps.selectedAccommodation?.name}</p>
-    <p>Anzahl Plätze gesamt: {accommodationProps.selectedAccommodation?.maxCapacity}</p>
-    <p>Anzahl freie Plätze: {accommodationProps.selectedAccommodation?.currentCapacity}</p>
+    <div className="accommodation-name">
+    {accommodationProps.selectedAccommodation?.name}
+    </div>
+    <div className="accommodation-distance">
+      {accommodationProps.selectedAccommodation?.currentCapacity} m entfernt
+    </div>
+    <div className="accommodation-occupancy">
+      {accommodationProps.selectedAccommodation?.currentCapacity} von {accommodationProps.selectedAccommodation?.maxCapacity} Plätze frei
+    </div>
+    <div className="accommodation-address">
+      {accommodationProps.selectedAccommodation?.address}
+    </div>
+    <div className="accommodation-tags">
+      <ul className="tag-items">{tagItems}</ul>
+      <form method="post" onSubmit={handleSubmit}>
+        <label className="tag-adding">
+          <input className="tag-input" name="newTagInput"></input>
+          <button className="add-tag-button">+</button>
+        </label>
+      </form>
+    </div>
     {accommodationProps.selectedAccommodation?.checkedIn 
-      ? <button onClick={() => accommodationProps.onCheckOut()}>Check-Out</button>
-      : <button onClick={() => accommodationProps.onCheckIn()}>Check-In</button>}
+      ? <button onClick={() => accommodationProps.onCheckOut()} className="check-in-out-button">Check-Out</button>
+      : <button onClick={() => accommodationProps.onCheckIn()} className="check-in-out-button">Check-In</button>}
     <p>{accommodationProps.selectedAccommodation?.systemStatusText}</p>
-    <p>Tags:</p>
-    <ul>{tagItems}</ul>
-    <form method="post" onSubmit={handleSubmit}>
-      <label>
-        <input name="newTagInput"></input>
-        <button>Add tag</button>
-      </label>
-    </form>
+
   </div>
   )
 };
