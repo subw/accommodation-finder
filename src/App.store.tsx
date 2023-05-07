@@ -20,23 +20,46 @@ export interface IAccommodation {
     selected: boolean;
     checkedIn: boolean;
     systemStatusText: string;
+    tags: string[];
 }
 
 export interface AccommodationState {
     accommodations: IAccommodation[];
     getAccommodations: () => void;
     selectAccommodation: (id: string) => void;
-    checkInAccommodation: () => void;
-    checkOutAccommodation: () => void;
+    checkInAccommodation: () => Promise<void>;
+    checkOutAccommodation: () => Promise<void>;
     updateSystemStatusText: (newText: string) => void;
+    addTagToAccommodation: (newTag: string) => Promise<void>;
     resetSystemStatusTexts: () => void;
 }
 
-export const useAccommodationStore = create<AccommodationState>()( devtools((set) => ({
+const mockAPICallPost = async (data: any, delay: number): Promise<any> => {
+    // actual call would be something like
+    // await axios.post('/api/check-in-out', data);
+
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            // Simulate an error condition
+            const errorCondition = false; // Set to true to simulate an error
+            if (errorCondition) {
+                reject(new Error('API request failed'));
+            } else {
+                resolve(data);
+            }
+        }, delay);
+      });
+}
+
+export const useAccommodationStore = create<AccommodationState>()( devtools(persist((set) => ({
     accommodations: [],
     getAccommodations: () => {
+        // TODO: Fetch data from actual API, not from mock
+        // TODO: Fetch specific data from own API and merge with data from public API
+        // get user data from own api. Looks like {user: {id: 1, checked-in: someAccommodationID}}
+        // get accommodationData froom own api. Looks like {[{id: 1, currentCapacity: 20, tags: ['clean', 'understaffed']}]}
         set({ accommodations: accommodationsData.map((accomodationData: AccommodationData) => { 
-            return {...accomodationData, currentCapacity: accomodationData.maxCapacity, selected: false, checkedIn: false, systemStatusText: ''}
+            return {...accomodationData, currentCapacity: accomodationData.maxCapacity, selected: false, checkedIn: false, systemStatusText: '', tags: ['unterstaffed', 'clean']}
         })})
     },
     selectAccommodation: (id: string) => {
@@ -46,7 +69,8 @@ export const useAccommodationStore = create<AccommodationState>()( devtools((set
             })
         }))
     },
-    checkInAccommodation: () => {
+    checkInAccommodation: async () => {
+        await mockAPICallPost({},1000);
         set((state) => ({ accommodations: state.accommodations
             .map((accommodation: IAccommodation) => {
                 if (accommodation.selected) {
@@ -55,9 +79,10 @@ export const useAccommodationStore = create<AccommodationState>()( devtools((set
                     return {...accommodation, checkedIn: false}
                 }
             })
-        }))
+        }));        
     },
-    checkOutAccommodation: () => {
+    checkOutAccommodation: async () => {
+        await mockAPICallPost({},1000);
         set((state) => ({ accommodations: state.accommodations
             .map((accommodation: IAccommodation) => {
                 if (accommodation.selected) {
@@ -85,5 +110,21 @@ export const useAccommodationStore = create<AccommodationState>()( devtools((set
                 return {...accommodation, systemStatusText: ''}
             })
         }))
+    },
+    addTagToAccommodation: async (newTag: string) => {
+        set((state) => ({ accommodations: state.accommodations
+            .map((accommodation: IAccommodation) => {
+                if(accommodation.tags.includes(newTag)) {
+                    throw new Error('Tag already exist, no update happened');
+                }
+                const updatedTags: string[] = accommodation.tags.splice(0);
+                updatedTags.push(newTag);
+                return {...accommodation, tags: updatedTags}
+            })
+        }))
     }
+}),
+{
+  name: 'accommodation-store',
+  getStorage: () => localStorage,
 })));

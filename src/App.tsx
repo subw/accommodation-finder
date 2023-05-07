@@ -14,6 +14,8 @@ const App: any = () => {
   const selectAccommodation = useAccommodationStore((state: AccommodationState) => state.selectAccommodation)
   const checkInAccommodation = useAccommodationStore((state: AccommodationState) => state.checkInAccommodation)
   const checkOutAccommodation = useAccommodationStore((state: AccommodationState) => state.checkOutAccommodation)
+  const addTagToAccommodation = useAccommodationStore((state: AccommodationState) => state.addTagToAccommodation)
+
   const updateSystemStatusText = useAccommodationStore((state: AccommodationState) => state.updateSystemStatusText)
   const resetSystemStatusText = useAccommodationStore((state: AccommodationState) => state.resetSystemStatusTexts)
 
@@ -23,21 +25,38 @@ const App: any = () => {
     changeLocation('accommodation');
   }
 
-  function handleCheckIn() {
+  async function handleCheckIn() {
     let currentlyCheckedInAccommodation: IAccommodation = accommodations.filter((accommodation: IAccommodation) => {
       return accommodation.checkedIn;
     })[0]
     if (currentlyCheckedInAccommodation !== undefined) {
       updateSystemStatusText('already checked in! Please check out of ' + currentlyCheckedInAccommodation.name + ' first.')
     } else {
-      checkInAccommodation();
-      updateSystemStatusText('successfully checked in');
+      try {
+        await checkInAccommodation();
+        updateSystemStatusText('successfully checked in');
+      } catch (error) {
+        updateSystemStatusText('there was a problem checking you in. Please try again later.');
+      }
     }
   }
 
-  function handleCheckOut() {
-    checkOutAccommodation();
-    updateSystemStatusText('successfully checked out');
+  async function handleCheckOut() {
+    try {
+      await checkOutAccommodation();
+      updateSystemStatusText('successfully checked out');
+    } catch (error) {
+      updateSystemStatusText('there was a problem checking you out. Please try again later.');
+    }
+  }
+
+  async function handleAddTag() {
+    try {
+      await addTagToAccommodation('newTag');
+      updateSystemStatusText('successfully added a new tag');
+    } catch (error: any) {
+      updateSystemStatusText('there was a problem adding your tag.' + error.message);
+    }
   }
 
   useEffect(() => {
@@ -58,7 +77,8 @@ const App: any = () => {
               return accommodation.selected;
             })[0]} 
             onCheckIn={() => handleCheckIn()}
-            onCheckOut={() => handleCheckOut()}/>
+            onCheckOut={() => handleCheckOut()}
+            addTag={() => handleAddTag()}/>
       }
     </div>
   );
