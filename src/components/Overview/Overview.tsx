@@ -7,6 +7,9 @@ interface OverviewProps {
   onButtonClick: any
 }
 
+//TODO: add proper distance
+//TODO: add checkbox functionality
+
 const Overview: FC<OverviewProps> = (overviewProps: OverviewProps) => {
 
     const listItems = overviewProps.accommodations?.map((accommodation: IAccommodation) =>

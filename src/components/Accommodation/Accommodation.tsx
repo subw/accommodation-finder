@@ -25,6 +25,7 @@ const Accommodation: FC<AccommodationProps> = (accommodationProps: Accommodation
       </li>
     );
 
+    //TODO: add proper distance
   return (
   <div className="Accommodation" data-testid="Accommodation">
     <div className="accommodation-name">
