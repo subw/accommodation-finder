@@ -1,5 +1,4 @@
 import {create } from 'zustand';
-import { AccommodationData, accommodationsData } from './assets/mock-data';
 import { devtools, persist } from 'zustand/middleware'
 
 export interface AppState {
@@ -11,6 +10,23 @@ export const useAppStore = create<AppState>( (set) => ({
     location: 'overview',
     updateLocation: (newLocation: string) => {return set({ location: newLocation })}
 }));
+
+export interface AccommodationProperties {
+    art: number;
+    haus_nr: string;
+    ort: string;
+    plaetze: number;
+    strasse: string;
+    traeger: string;
+}
+
+export interface AccommodationData {
+    id: string;
+    geometry: any;
+    srsName: string;
+    type: string;
+    properties: AccommodationProperties;
+}
 
 export interface IAccommodation {
     id: string;
@@ -25,6 +41,7 @@ export interface IAccommodation {
 
 export interface AccommodationState {
     accommodations: IAccommodation[];
+    lastFetchTime: number;
     getAccommodations: () => void;
     selectAccommodation: (id: string) => void;
     checkInAccommodation: () => Promise<void>;
@@ -51,16 +68,43 @@ const mockAPICallPost = async (data: any, delay: number): Promise<any> => {
       });
 }
 
-export const useAccommodationStore = create<AccommodationState>()( devtools(persist((set) => ({
+const fetchBaseDataFromAPI = async (): Promise<any> => {
+    try {
+        const response = await fetch('https://api.hamburg.de/datasets/v1/uebernachtungsangebote/collections/uebernachtungsangebote/items?limit=10&offset=0&bulk=false&f=json');
+        const jsonData = await response.json();
+        return jsonData.features;
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+}
+
+export const useAccommodationStore = create<AccommodationState>()( devtools(persist((set, get) => ({
     accommodations: [],
-    getAccommodations: () => {
-        // TODO: Fetch data from actual API, not from mock
+    lastFetchTime: 0,
+    getAccommodations: async () => {
+        const currentTime = Date.now();
+        const cachingDuration = 24 * 60 * 60 * 1000;
+        const timeDiff = currentTime - get().lastFetchTime;
+
+        if (timeDiff < cachingDuration) {
+          return;
+        }
+        const baseData: AccommodationData[] = await fetchBaseDataFromAPI();
         // TODO: Fetch specific data from own API and merge with data from public API
-        // get user data from own api. Looks like {user: {id: 1, checked-in: someAccommodationID}}
-        // get accommodationData froom own api. Looks like {[{id: 1, currentCapacity: 20, tags: ['clean', 'understaffed']}]}
-        set({ accommodations: accommodationsData.map((accomodationData: AccommodationData) => { 
-            return {...accomodationData, currentCapacity: accomodationData.maxCapacity, selected: false, checkedIn: false, systemStatusText: '', tags: ['unterstaffed', 'clean']}
-        })})
+            // get user data from own api. Looks like {user: {id: 1, checked-in: someAccommodationID}}
+            // get accommodationData froom own api. Looks like {[{id: 1, currentCapacity: 20, tags: ['clean', 'understaffed']}]}
+        set({ accommodations: baseData.map((accomodationData: AccommodationData) => {
+            return {
+                id: accomodationData.id,
+                name: accomodationData.properties.traeger, 
+                maxCapacity: accomodationData.properties.plaetze, 
+                currentCapacity: accomodationData.properties.plaetze, 
+                selected: false, 
+                checkedIn: false, 
+                systemStatusText: '', 
+                tags: ['unterstaffed', 'clean']}
+        }),
+        lastFetchTime: currentTime});
     },
     selectAccommodation: (id: string) => {
         set((state) => ({ accommodations: state.accommodations
